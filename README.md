@@ -2,6 +2,8 @@
 
 Ephemeral MCP migration for Claude Code. Move credentials to env vars, disable the MCP servers (reversible), and let the agent hit the REST APIs directly — smaller baseline context per turn, and the agent composes calls instead of swallowing whatever the MCP tool returns.
 
+> **Want teleport to support an MCP?** [Open a request](../../issues/new?template=request-mcp.yml) or thumbs-up the [MCP Request Board](https://github.com/mnlt/teleport/issues/1).
+
 ## What you save
 
 MCP tool definitions get loaded into every turn. In a multi-server setup, that's tens of thousands of tokens paid upfront — every turn, for schemas the agent may not use. Bigger context windows raise the ceiling, but they don't change the per-turn cost, cache invalidation, or the "process everything the tool returns" problem.
@@ -98,13 +100,11 @@ Teleport also ships 10 self-contained skills from [`anthropics/skills`](https://
 
 See [catalog.json](./catalog.json) — 30 entries (20 MCP-wrappers + 10 self-contained skills). Each skill's license is governed by its upstream `source_repo`.
 
-## Adding entries
+## Contributing
 
-Teleport only catalogs MCPs already listed on a trusted registry that runs automated security checks ([Anthropic MCP Registry](https://registry.modelcontextprotocol.io/), [Smithery](https://smithery.ai), [Glama](https://glama.ai/mcp/servers), or similar). We delegate security auditing to those registries — we don't re-audit.
+Submission policy, field-by-field docs, and what gets rejected: see [CONTRIBUTING.md](CONTRIBUTING.md).
 
-**Want teleport to support an MCP you use?** Open a ["Request an MCP" issue](../../issues/new?template=request-mcp.yml), or thumbs-up the service on the pinned MCP Request Board. This is the path if you're a user, not the MCP author.
-
-**Built an MCP and want it in the catalog?** See [CONTRIBUTING.md](CONTRIBUTING.md) — requires a draft SKILL.md and a registry link.
+Teleport only catalogs MCPs already listed on a trusted registry that runs automated security checks ([Anthropic MCP Registry](https://registry.modelcontextprotocol.io/), [Smithery](https://smithery.ai), [Glama](https://glama.ai/mcp/servers), or similar).
 
 ## Design notes
 
