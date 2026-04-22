@@ -301,6 +301,146 @@
       "source_repo": "mnlt/teleport",
       "path": "skills/wellread",
       "ref": "main"
+    },
+    {
+      "id": "brainstorming",
+      "type": "skill",
+      "name": "Brainstorming",
+      "description": "Structured brainstorming workflow for exploring problem space before committing to a solution.",
+      "tags": ["coding-workflow", "ideation", "superpowers"],
+      "source_repo": "obra/superpowers",
+      "path": "skills/brainstorming",
+      "ref": "main"
+    },
+    {
+      "id": "dispatching-parallel-agents",
+      "type": "skill",
+      "name": "Dispatching Parallel Agents",
+      "description": "Coordinate multiple agents in parallel for tasks that decompose cleanly into independent subtasks.",
+      "tags": ["coding-workflow", "multi-agent", "parallelism", "superpowers"],
+      "source_repo": "obra/superpowers",
+      "path": "skills/dispatching-parallel-agents",
+      "ref": "main"
+    },
+    {
+      "id": "executing-plans",
+      "type": "skill",
+      "name": "Executing Plans",
+      "description": "Execute a previously written plan step-by-step with checkpoints and verification.",
+      "tags": ["coding-workflow", "planning", "superpowers"],
+      "source_repo": "obra/superpowers",
+      "path": "skills/executing-plans",
+      "ref": "main"
+    },
+    {
+      "id": "finishing-a-development-branch",
+      "type": "skill",
+      "name": "Finishing a Development Branch",
+      "description": "Wrap up a feature branch cleanly: final review, commit hygiene, merge prep.",
+      "tags": ["coding-workflow", "git", "superpowers"],
+      "source_repo": "obra/superpowers",
+      "path": "skills/finishing-a-development-branch",
+      "ref": "main"
+    },
+    {
+      "id": "receiving-code-review",
+      "type": "skill",
+      "name": "Receiving Code Review",
+      "description": "Respond to code review feedback constructively — address comments, update PR, track unresolved items.",
+      "tags": ["coding-workflow", "code-review", "superpowers"],
+      "source_repo": "obra/superpowers",
+      "path": "skills/receiving-code-review",
+      "ref": "main"
+    },
+    {
+      "id": "requesting-code-review",
+      "type": "skill",
+      "name": "Requesting Code Review",
+      "description": "Prepare a PR for review — title, description, test plan, reviewers, and self-review checklist.",
+      "tags": ["coding-workflow", "code-review", "superpowers"],
+      "source_repo": "obra/superpowers",
+      "path": "skills/requesting-code-review",
+      "ref": "main"
+    },
+    {
+      "id": "subagent-driven-development",
+      "type": "skill",
+      "name": "Subagent-Driven Development",
+      "description": "Delegate focused subtasks to specialized subagents while maintaining overall direction.",
+      "tags": ["coding-workflow", "multi-agent", "superpowers"],
+      "source_repo": "obra/superpowers",
+      "path": "skills/subagent-driven-development",
+      "ref": "main"
+    },
+    {
+      "id": "systematic-debugging",
+      "type": "skill",
+      "name": "Systematic Debugging",
+      "description": "Structured debugging workflow: reproduce, isolate, hypothesize, verify. Avoid shotgun fixes.",
+      "tags": ["coding-workflow", "debugging", "superpowers"],
+      "source_repo": "obra/superpowers",
+      "path": "skills/systematic-debugging",
+      "ref": "main"
+    },
+    {
+      "id": "test-driven-development",
+      "type": "skill",
+      "name": "Test-Driven Development",
+      "description": "Strict red-green-refactor TDD workflow. Write the test first, watch it fail, then implement minimally.",
+      "tags": ["coding-workflow", "tdd", "testing", "superpowers"],
+      "source_repo": "obra/superpowers",
+      "path": "skills/test-driven-development",
+      "ref": "main"
+    },
+    {
+      "id": "using-git-worktrees",
+      "type": "skill",
+      "name": "Using Git Worktrees",
+      "description": "Work on multiple branches simultaneously with git worktree — when it's worth the complexity.",
+      "tags": ["coding-workflow", "git", "superpowers"],
+      "source_repo": "obra/superpowers",
+      "path": "skills/using-git-worktrees",
+      "ref": "main"
+    },
+    {
+      "id": "using-superpowers",
+      "type": "skill",
+      "name": "Using Superpowers",
+      "description": "Meta-skill: how to use the Superpowers workflow suite as a coherent whole.",
+      "tags": ["coding-workflow", "meta", "superpowers"],
+      "source_repo": "obra/superpowers",
+      "path": "skills/using-superpowers",
+      "ref": "main"
+    },
+    {
+      "id": "verification-before-completion",
+      "type": "skill",
+      "name": "Verification Before Completion",
+      "description": "Verify the work actually works before marking a task done — avoid premature 'done' signals.",
+      "tags": ["coding-workflow", "quality", "superpowers"],
+      "source_repo": "obra/superpowers",
+      "path": "skills/verification-before-completion",
+      "ref": "main"
+    },
+    {
+      "id": "writing-plans",
+      "type": "skill",
+      "name": "Writing Plans",
+      "description": "Write a concrete implementation plan before writing code — structure, steps, unknowns, verification.",
+      "tags": ["coding-workflow", "planning", "superpowers"],
+      "source_repo": "obra/superpowers",
+      "path": "skills/writing-plans",
+      "ref": "main"
+    },
+    {
+      "id": "writing-skills",
+      "type": "skill",
+      "name": "Writing Skills",
+      "description": "How to author new skills in the Superpowers / Claude Code skill format.",
+      "tags": ["coding-workflow", "meta", "superpowers"],
+      "source_repo": "obra/superpowers",
+      "path": "skills/writing-skills",
+      "ref": "main"
     }
   ]
 }

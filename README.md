@@ -94,11 +94,16 @@ claude mcp enable <name>
 
 ## Skills (secondary)
 
-Teleport also ships 10 self-contained skills from [`anthropics/skills`](https://github.com/anthropics/skills) — pdf, docx, xlsx, pptx, canvas-design, webapp-testing, mcp-builder, frontend-design, algorithmic-art, slack-gif-creator. These are fetched on-demand from `/tmp/` when you ask for something they cover; nothing persists in `~/.claude/skills/`.
+Teleport also ships 24 self-contained skills:
+
+- **10 from [`anthropics/skills`](https://github.com/anthropics/skills)** — pdf, docx, xlsx, pptx, canvas-design, webapp-testing, mcp-builder, frontend-design, algorithmic-art, slack-gif-creator.
+- **14 from [`obra/superpowers`](https://github.com/obra/superpowers)** — coding workflows: TDD, systematic-debugging, writing-plans, executing-plans, brainstorming, code-review (sending and receiving), git-worktrees, parallel-agents, and more.
+
+All fetched on-demand from `/tmp/` when you ask for something they cover; nothing persists in `~/.claude/skills/`.
 
 ## Catalog
 
-See [catalog.json](./catalog.json) — 30 entries (20 MCP-wrappers + 10 self-contained skills). Each skill's license is governed by its upstream `source_repo`.
+See [catalog.json](./catalog.json) — 44 entries (20 MCP-wrappers + 24 self-contained skills, including 14 from [obra/superpowers](https://github.com/obra/superpowers)). Each skill's license is governed by its upstream `source_repo`.
 
 ## Contributing
 
