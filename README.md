@@ -1,6 +1,8 @@
 # Teleport
 
-Ephemeral MCP migration for Claude Code. Move credentials to env vars, disable the MCP servers (reversible), and let the agent hit the REST APIs directly — smaller baseline context per turn, and the agent composes calls instead of swallowing whatever the MCP tool returns.
+MCP is the GUI for AI agents. Teleport lets them use the API directly.
+
+In practice: move credentials from each MCP to env vars, disable the MCP servers (reversible), and let small skills teach the agent to call the REST APIs on demand. Smaller baseline context per turn, and the agent composes calls instead of swallowing whatever the MCP tool returns.
 
 > **Want teleport to support an MCP?** [Open a request](../../issues/new?template=request-mcp.yml) or thumbs-up the [MCP Request Board](https://github.com/mnlt/teleport/issues/1).
 
