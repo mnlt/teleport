@@ -12,7 +12,7 @@ Teleport is like opening only the app you need, exactly when you need it - so yo
 
 Context7, Superpowers, GitHub, Stripe… none of them loaded until you actually need them.
 
-MCP acts like a GUI for AI agents. Teleport replaces that with simple credentials in env vars and small skills loaded on demand. The result: a smaller baseline context per turn and an agent that composes calls instead of blindly consuming whatever an MCP tool returns.
+The result: a smaller baseline context per turn and an agent that composes calls instead of blindly consuming whatever an MCP tool returns.
 
 > **Want teleport to support an MCP?** Thumbs-up (or add it) on the [MCP Request Board](https://github.com/mnlt/teleport/issues/1).
 >
