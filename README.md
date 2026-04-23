@@ -8,7 +8,7 @@ MCP is the GUI for AI agents. Teleport replaces it with credentials in env vars,
 
 > **Want teleport to support an MCP?** Thumbs-up (or add it) on the [MCP Request Board](https://github.com/mnlt/teleport/issues/1).
 >
-> **Want to submit your own MCP?** Increase adoption — users discover and use it while coding, no install required. See [CONTRIBUTING.md](CONTRIBUTING.md).
+> **Want to submit your own MCP?** Increase adoption — users discover and use it while coding. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## What you save
 
