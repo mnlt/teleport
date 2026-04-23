@@ -14,29 +14,7 @@ MCP is the GUI for AI agents. Teleport replaces it with credentials in env vars,
 
 MCP tool definitions get loaded into every turn. In a multi-server setup, that's tens of thousands of tokens paid upfront — every turn, for schemas the agent may not use. Bigger context windows raise the ceiling, but they don't change the per-turn cost, cache invalidation, or the "process everything the tool returns" problem.
 
-Measured via Anthropic's `count_tokens` endpoint (real Claude tokenizer), 2026-04-22:
-
-| MCP        | Tools | Tokens |
-|------------|------:|-------:|
-| Notion     | 22    | 22,056 |
-| Linear     | 42    |  5,920 |
-| GitHub     | 26    |  5,385 |
-| Figma      |  2    |  1,591 |
-| Slack      |  8    |  1,411 |
-
-Community-reported (from public `/context` dumps):
-
-| MCP        | Tokens |
-|------------|-------:|
-| Asana      | ~30,000 |
-| Google Docs | ~25,000 |
-| Google Calendar | ~15,000 |
-| Atlassian (Jira) | ~12,000 |
-| Gmail      |  ~8,000 |
-
 Teleport-loaded skills cost ~400–800 tokens each, only when the agent needs them.
-
-**Reproduce**: `ANTHROPIC_API_KEY=… python3 setup/measure_tokens.py`. Counts drift with each MCP version — run `/context` in Claude Code for your actual numbers.
 
 ## Why not just…
 
@@ -54,7 +32,7 @@ curl -sL https://raw.githubusercontent.com/mnlt/teleport/main/setup/install.sh -
 
 Installs the `teleport-setup` CLI into `~/.local/bin` and the `teleport` meta-skill into `~/.claude/skills/teleport/`.
 
-## Use
+## Setup
 
 ```bash
 teleport-setup
@@ -69,6 +47,10 @@ teleport-setup add-key <service>
 ```
 
 Opens the signup page, validates the format, saves it with masked input.
+
+## Use
+
+```use teleport on your prompts```
 
 ## Two paths, depending on how the MCP was installed
 
@@ -103,19 +85,12 @@ claude mcp enable <name>
 Teleport also ships 24 self-contained skills:
 
 - **10 from [`anthropics/skills`](https://github.com/anthropics/skills)** — pdf, docx, xlsx, pptx, canvas-design, webapp-testing, mcp-builder, frontend-design, algorithmic-art, slack-gif-creator.
-- **14 from [`obra/superpowers`](https://github.com/obra/superpowers)** — coding workflows: TDD, systematic-debugging, writing-plans, executing-plans, brainstorming, code-review (sending and receiving), git-worktrees, parallel-agents, and more.
 
 All fetched on-demand from `/tmp/` when you ask for something they cover; nothing persists in `~/.claude/skills/`.
 
 ## Catalog
 
-See [catalog.json](./catalog.json) — 45 entries (21 MCP-wrappers + 24 self-contained skills, including 14 from [obra/superpowers](https://github.com/obra/superpowers)). Each skill's license is governed by its upstream `source_repo`.
-
-## Contributing
-
-Submission policy, field-by-field docs, and what gets rejected: see [CONTRIBUTING.md](CONTRIBUTING.md).
-
-Teleport only catalogs MCPs already listed on a trusted registry that runs automated security checks ([Anthropic MCP Registry](https://registry.modelcontextprotocol.io/), [Smithery](https://smithery.ai), [Glama](https://glama.ai/mcp/servers), or similar).
+See [catalog.json](./catalog.json) — 45 entries (21 MCP-wrappers + 24 self-contained skills. Each skill's license is governed by its upstream `source_repo`.
 
 ## Design notes
 
@@ -124,29 +99,7 @@ Teleport only catalogs MCPs already listed on a trusted registry that runs autom
 - **Imperative skill guidance:** when a credential is missing, the skill instructs the agent to respond with a specific `teleport-setup add-key <service>` message verbatim — no paraphrasing, no suggestions to hand-edit `settings.local.json`.
 - **No runtime deps beyond `curl`, Python 3.10+, and Claude Code.**
 
-## Telemetry
-
-Teleport pings an anonymous event counter so the maintainer can see what's used and prioritize:
-
-| Event | When | Per-MCP? |
-|-------|------|----------|
-| `install-started` | Top of `install.sh` | — |
-| `install-completed` | End of `install.sh` (success) | — |
-| `first-run` | First invocation of `teleport-setup` on a machine | — |
-| `mcp-detected` | `teleport-setup` detects an MCP in your config | ✓ (one per install per MCP) |
-| `add-key-started` | You open `teleport-setup add-key <service>` | ✓ |
-| `add-key-completed` | Credential saved successfully | ✓ |
-| `migration` | ≥1 MCP migrated successfully | — |
-| `skill-used` | Meta-skill fetches a skill from the catalog | ✓ |
-
-Only aggregate counts stored: no IP, no PII, no per-event timestamps, no correlation between pings. Counter runs on [Deno Deploy + Deno KV](./counter/) — code is [open source in this repo](./counter/main.ts) so you can audit it.
-
-Stats endpoint (public): <https://teleport.mnlt.deno.net/stats>.
-
-**Opt out**: set `TELEPORT_NO_TELEMETRY=1` in your environment before running the installer or the CLI.
-
 ## Caveats
 
 - **Claude Code only.** Leans on Claude (Sonnet/Opus) knowing the popular REST APIs. Smaller or weaker models — local LLMs, other cloud providers — won't work the same way. For obscure APIs the skill contains the curl recipe so the model's prior knowledge matters less; but the baseline assumption is Claude Code + Sonnet or Opus.
-- Token counts drift with each MCP version update. Re-run `setup/measure_tokens.py` or `/context` for current numbers.
 - Self-contained skills that need Python packages, browsers, or system tools still require those installed locally.
