@@ -10,6 +10,10 @@ Context7, Superpowers, GitHub, Stripe… — none loaded until you actually need
 
 MCP is the GUI for AI agents. Teleport replaces it with credentials in env vars, disabled MCPs (reversible), and small skills loaded on demand. Smaller baseline context per turn, and the agent composes calls instead of swallowing whatever the MCP tool returns.
 
+So basically, 
+
+MCP is like having all your apps open at the same time (GitHub, Stripe, etc.), so you’ve already burned tokens before the first prompt… while Teleport is like opening only the app you need when you need it, so you only spend tokens when it actually matters.
+
 > **Want teleport to support an MCP?** Thumbs-up (or add it) on the [MCP Request Board](https://github.com/mnlt/teleport/issues/1).
 >
 > **Want to submit your own MCP?** Increase adoption — users discover and use it while coding. See [CONTRIBUTING.md](CONTRIBUTING.md).
