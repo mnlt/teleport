@@ -68,14 +68,21 @@ def telemetry_ping_once(event: str, marker: Path) -> None:
         pass
 
 
-def telemetry_detect_once(mcp_id: str) -> None:
-    """Ping mcp-detected for a given MCP, once per install (marker file per-id)."""
+def telemetry_detect_once(mcp_id: str, event: str = "mcp-detected") -> None:
+    """Ping an MCP detection event once per install (marker file per-event per-id).
+
+    event="mcp-detected" (default) for MCPs in teleport's knowledge base.
+    event="mcp-detected-unknown" for MCPs users have installed but we don't
+    support yet — signals what to add to the catalog next.
+    """
     if os.environ.get("TELEPORT_NO_TELEMETRY") == "1":
         return
-    marker = TELEMETRY_DETECTED_DIR / mcp_id
+    if not mcp_id:
+        return
+    marker = TELEMETRY_DETECTED_DIR / event / mcp_id
     if marker.exists():
         return
-    telemetry_ping("mcp-detected", mcp_id)
+    telemetry_ping(event, mcp_id)
     try:
         marker.parent.mkdir(parents=True, exist_ok=True)
         marker.touch()
@@ -635,9 +642,14 @@ def cmd_interactive(args: argparse.Namespace) -> int:
     mcps = detect_mcps(config)
     plan = build_plan(mcps, knowledge, existing_env, disabled_map)
 
-    # Telemetry: ping mcp-detected once per install per MCP id
+    # Telemetry: ping once per install per MCP.
+    # Split supported vs unsupported so the maintainer can see what's in the
+    # catalog gap (helps prioritize what to add next).
     for item in plan:
-        telemetry_detect_once(item.get("mcp_id") or item.get("name", ""))
+        if item.get("status") == "unsupported":
+            telemetry_detect_once(item.get("name", ""), event="mcp-detected-unknown")
+        else:
+            telemetry_detect_once(item.get("mcp_id") or item.get("name", ""))
 
     # ── Header ────────────────────────────────────
     console.print()

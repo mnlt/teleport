@@ -93,6 +93,21 @@ def print_discovery_funnel(stats: dict) -> None:
     print()
 
 
+def print_catalog_gaps(stats: dict, n: int = 15) -> None:
+    """MCPs users have installed that aren't in the catalog yet."""
+    unknown = [
+        (k[len("mcp-detected-unknown/"):], v)
+        for k, v in stats.items() if k.startswith("mcp-detected-unknown/")
+    ]
+    if not unknown:
+        return
+    unknown.sort(key=lambda x: -x[1])
+    rule(f"CATALOG GAPS (unsupported MCPs seen — candidates to add)")
+    for i, (name, v) in enumerate(unknown[:n], 1):
+        print(f"  {i:>2}. {name:<30} {v:>4}")
+    print()
+
+
 def print_top_skills(stats: dict, n: int = 10) -> None:
     used = [
         (k[len("skill-used/"):], v)
@@ -126,6 +141,7 @@ def main() -> int:
         "ADD-KEY FUNNEL (per service)",
     )
     print_discovery_funnel(stats)
+    print_catalog_gaps(stats)
     print_top_skills(stats)
     return 0
 
