@@ -1,5 +1,9 @@
 # Teleport
 
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
+[![Skills in catalog](https://img.shields.io/badge/catalog-45%20entries-green.svg)](catalog.json) 
+[![GitHub stars](https://img.shields.io/github/stars/mnlt/teleport?style=social)](https://github.com/mnlt/teleport/stargazers) 
+
 **MCP, but without the MCP.**
 
 Context7, Superpowers, GitHub, Stripe… — none loaded until you actually need them.
