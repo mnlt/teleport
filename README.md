@@ -73,8 +73,6 @@ Not every MCP stores its credential somewhere teleport can read. Both paths end 
 
 ## Supported MCPs
 
-21 MCP-wrapper skills - credential check, imperative "run `teleport-setup add-key`" guidance, and curl recipes for the common operations:
-
 Context7 · GitHub · Slack · Notion · Linear · Figma · Jira · Exa · Stripe · Supabase · Vercel · Netlify · Cloudflare · Railway · Resend · Sentry · PostHog · Lemon Squeezy · Discord · Wellread · n8n
 
 ## How migration works
