@@ -1,0 +1,7 @@
+{
+  "tasks": {
+    "dev": "deno run --allow-net --allow-env --unstable-kv main.ts",
+    "deploy": "deployctl deploy --project=teleport-counter main.ts"
+  },
+  "imports": {}
+}
