@@ -5,8 +5,9 @@ Runs each flow in a sandboxed $HOME, triggers the event, and diffs the counter
 endpoint to confirm the event fired. Tests 7 of 8 telemetry events — skill-used
 requires a live Claude Code session and is documented as manual.
 
-Tests increment real production counters at https://teleport.mnlt.deno.net.
-Cheap and maintainer-only for now, so minor noise is acceptable.
+Tests ping the same counter as production but with the "test-" prefix
+(see TELEMETRY_PREFIX below); tools/stats.py filters those by default,
+so test runs don't pollute the user-facing dashboard.
 
 Run from repo root:
     python3 tests/test_telemetry.py
@@ -24,6 +25,9 @@ COUNTER_URL = "https://teleport.mnlt.deno.net"
 INSTALL_SH_URL = "https://raw.githubusercontent.com/mnlt/teleport/main/setup/install.sh"
 # KV eventual consistency grace period. Increase if tests flake.
 SETTLE_SECONDS = 3
+# Tests ping the same counter but prefix events with "test-" so they don't
+# pollute production stats. stats.py filters test-* events by default.
+TELEMETRY_PREFIX = "test-"
 
 
 # ---------- helpers ----------
@@ -38,12 +42,12 @@ def diff(before: dict, after: dict, key: str) -> int:
 
 
 def sandbox_env(tmpdir: Path) -> dict:
-    """Env with $HOME overridden; PATH has the sandboxed teleport-setup."""
+    """Env with $HOME overridden; PATH has the sandboxed teleport-setup.
+    Events fire with TELEMETRY_PREFIX so test pings don't pollute production stats."""
     env = os.environ.copy()
     env["HOME"] = str(tmpdir)
     env["PATH"] = f"{tmpdir}/.local/bin:{env.get('PATH', '')}"
-    # Tests pollute the real counter. If you ever want to silence telemetry for a run,
-    # uncomment: env["TELEPORT_NO_TELEMETRY"] = "1"
+    env["TELEPORT_TELEMETRY_PREFIX"] = TELEMETRY_PREFIX
     return env
 
 
@@ -86,8 +90,8 @@ def test_install_events() -> tuple[str, bool, str]:
         proc = run_install(tmpdir)
         time.sleep(SETTLE_SECONDS)
         after = get_stats()
-        started = diff(before, after, "install-started")
-        completed = diff(before, after, "install-completed")
+        started = diff(before, after, f"{TELEMETRY_PREFIX}install-started")
+        completed = diff(before, after, f"{TELEMETRY_PREFIX}install-completed")
         ok = proc.returncode == 0 and started >= 1 and completed >= 1
         detail = f"rc={proc.returncode} started=+{started} completed=+{completed}"
         if not ok:
@@ -124,10 +128,10 @@ def test_first_run_detect_migration() -> tuple[str, bool, str]:
         time.sleep(SETTLE_SECONDS)
         after = get_stats()
 
-        first_run = diff(before, after, "first-run")
-        gh_det = diff(before, after, "mcp-detected/github")
-        fg_det = diff(before, after, "mcp-detected/figma")
-        migration = diff(before, after, "migration")
+        first_run = diff(before, after, f"{TELEMETRY_PREFIX}first-run")
+        gh_det = diff(before, after, f"{TELEMETRY_PREFIX}mcp-detected/github")
+        fg_det = diff(before, after, f"{TELEMETRY_PREFIX}mcp-detected/figma")
+        migration = diff(before, after, f"{TELEMETRY_PREFIX}migration")
 
         ok = first_run >= 1 and gh_det >= 1 and fg_det >= 1 and migration >= 1
         detail = (f"rc={proc.returncode} first-run=+{first_run} "
@@ -157,8 +161,8 @@ def test_add_key() -> tuple[str, bool, str]:
         time.sleep(SETTLE_SECONDS)
         after = get_stats()
 
-        started = diff(before, after, "add-key-started/github")
-        completed = diff(before, after, "add-key-completed/github")
+        started = diff(before, after, f"{TELEMETRY_PREFIX}add-key-started/github")
+        completed = diff(before, after, f"{TELEMETRY_PREFIX}add-key-completed/github")
         ok = started >= 1 and completed >= 1
         detail = f"rc={proc.returncode} started=+{started} completed=+{completed}"
         if not ok:

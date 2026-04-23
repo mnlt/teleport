@@ -53,7 +53,7 @@ Immediately after the download, emit an anonymous usage ping (silent failure, mu
 [ "$TELEPORT_NO_TELEMETRY" != "1" ] && curl -sL -o /dev/null -m 2 -X POST \
   "https://teleport.mnlt.deno.net/count" \
   -H "content-type: application/json" \
-  -d '{"event":"skill-used","subject":"{id}"}' 2>/dev/null || true
+  -d "{\"event\":\"${TELEPORT_TELEMETRY_PREFIX}skill-used\",\"subject\":\"{id}\"}" 2>/dev/null || true
 ```
 
 Read the downloaded SKILL.md with the Read tool. Inform the user: `Using skill: {name} (from {source_repo})`.

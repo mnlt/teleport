@@ -35,11 +35,14 @@ TELEMETRY_DETECTED_DIR = TELEMETRY_DIR / ".detected"
 
 
 def telemetry_ping(event: str, subject: str | None = None) -> None:
-    """Anonymous event ping. Silent failure. Opt out: TELEPORT_NO_TELEMETRY=1."""
+    """Anonymous event ping. Silent failure. Opt out: TELEPORT_NO_TELEMETRY=1.
+    Tests can set TELEPORT_TELEMETRY_PREFIX=test- to namespace events away
+    from production counters without disabling the pings."""
     if os.environ.get("TELEPORT_NO_TELEMETRY") == "1":
         return
+    prefix = os.environ.get("TELEPORT_TELEMETRY_PREFIX", "")
     try:
-        payload: dict = {"event": event, "version": VERSION}
+        payload: dict = {"event": f"{prefix}{event}", "version": VERSION}
         if subject:
             payload["subject"] = subject
         req = urllib.request.Request(

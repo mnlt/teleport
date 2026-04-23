@@ -12,9 +12,13 @@ COUNTER_URL = "https://teleport.mnlt.deno.net"
 CATALOG_URL = "https://raw.githubusercontent.com/mnlt/teleport/main/catalog.json"
 
 
-def fetch_stats() -> dict:
+def fetch_stats(include_tests: bool = False) -> dict:
     with urllib.request.urlopen(f"{COUNTER_URL}/stats", timeout=10) as r:
-        return json.loads(r.read())
+        raw = json.loads(r.read())
+    if include_tests:
+        return raw
+    # Filter out test-prefixed events (from tests/test_telemetry.py runs)
+    return {k: v for k, v in raw.items() if not k.startswith("test-")}
 
 
 def fetch_known_ids() -> set:
@@ -196,8 +200,9 @@ def print_top_skills(stats: dict, n: int = 10) -> None:
 
 
 def main() -> int:
+    include_tests = "--include-tests" in sys.argv
     try:
-        stats = fetch_stats()
+        stats = fetch_stats(include_tests=include_tests)
     except Exception as e:
         print(f"error fetching {COUNTER_URL}/stats: {e}", file=sys.stderr)
         return 1
