@@ -90,7 +90,7 @@ claude mcp enable <name>
 
 ## Skills (secondary)
 
-Teleport also ships 24 self-contained skills:
+Teleport also ships self-contained skills:
 
 - **10 from [`anthropics/skills`](https://github.com/anthropics/skills)** — pdf, docx, xlsx, pptx, canvas-design, webapp-testing, mcp-builder, frontend-design, algorithmic-art, slack-gif-creator.
 
