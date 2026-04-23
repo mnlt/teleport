@@ -75,8 +75,6 @@ if ! echo ":$PATH:" | grep -q ":$BIN_DIR:"; then
   echo ""
 fi
 
-echo "run:  teleport-setup"
-echo ""
 echo "uninstall later:  teleport-setup uninstall"
 
 # Anonymous telemetry: install-completed event.
@@ -84,4 +82,25 @@ if [ "${TELEPORT_NO_TELEMETRY:-}" != "1" ]; then
   curl -sL -o /dev/null -m 3 -X POST "$COUNTER_URL/count" \
     -H "content-type: application/json" \
     -d "{\"event\":\"${TELEMETRY_PREFIX}install-completed\",\"version\":\"0.7.1\"}" 2>/dev/null || true
+fi
+
+# Auto-launch teleport-setup if running interactively. Skipped in CI / piped
+# contexts where /dev/tty is not readable, or when TELEPORT_NO_AUTORUN=1.
+if [ -r /dev/tty ] && [ "${TELEPORT_NO_AUTORUN:-}" != "1" ]; then
+  printf "\n▸ run teleport-setup now (scans your MCPs and migrates eligible ones)? [Y/n] "
+  read -r REPLY < /dev/tty
+  case "${REPLY:-y}" in
+    [Yy]*|"")
+      # Only rebind stdin if it's not already a TTY (i.e. `curl | bash`).
+      # When stdin is already a TTY (e.g. `bash install.sh`), redirecting via
+      # `< /dev/tty` produces an fd that kqueue can't register, breaking
+      # prompt_toolkit on macOS.
+      [ -t 0 ] || exec < /dev/tty
+      exec "$BIN_DIR/teleport-setup"
+      ;;
+    *)        echo "  skipped. run later:  teleport-setup" ;;
+  esac
+else
+  echo ""
+  echo "run:  teleport-setup"
 fi
