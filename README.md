@@ -6,11 +6,11 @@
 
 **MCP, but without the MCP.**
 
-MCP is like having all your apps open at the same time (GitHub, Stripe, etc.), so you’ve already burned tokens before the first prompt, while Teleport is like opening only the app you need when you need it, so you only spend tokens when it actually matters.
+MCP is like having all your apps open at the same time (GitHub, Stripe, etc.), so you’ve already burned tokens before the first prompt. Teleport is like opening only the app you need, exactly when you need it—so you only spend tokens when it actually matters.
 
-Context7, Superpowers, GitHub, Stripe… - none loaded until you actually need them.
+Context7, Superpowers, GitHub, Stripe… none of them are loaded until they’re actually needed.
 
-MCP is the GUI for AI agents. Teleport replaces it with credentials in env vars, disabled MCPs (reversible), and small skills loaded on demand. Smaller baseline context per turn, and the agent composes calls instead of swallowing whatever the MCP tool returns.
+MCP acts like a GUI for AI agents. Teleport replaces that with simple credentials in env vars, switchable (reversible) MCPs, and small skills loaded on demand. The result: a smaller baseline context per turn, and an agent that composes calls instead of blindly consuming whatever an MCP tool returns.
 
 > **Want teleport to support an MCP?** Thumbs-up (or add it) on the [MCP Request Board](https://github.com/mnlt/teleport/issues/1).
 >
