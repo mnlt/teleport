@@ -28,7 +28,7 @@ Teleport-loaded skills cost ~400–800 tokens each, only when the agent needs th
 
 **…handle OAuth like MCP does?** For API-key auth it's just an env var. For OAuth-based MCPs (Notion HTTP, Figma hosted, Atlassian Rovo) there's no OAuth bypass — the user generates a PAT from the service dashboard and teleport stores that. MCP's OAuth handling is genuinely nicer there.
 
-## Install
+## 1. Install
 
 ```bash
 curl -sL https://raw.githubusercontent.com/mnlt/teleport/main/setup/install.sh -o /tmp/teleport-install.sh && bash /tmp/teleport-install.sh
@@ -36,7 +36,7 @@ curl -sL https://raw.githubusercontent.com/mnlt/teleport/main/setup/install.sh -
 
 Installs the `teleport-setup` CLI into `~/.local/bin` and the `teleport` meta-skill into `~/.claude/skills/teleport/`.
 
-## Setup
+## 2. Setup
 
 ```bash
 teleport-setup
@@ -52,7 +52,7 @@ teleport-setup add-key <service>
 
 Opens the signup page, validates the format, saves it with masked input.
 
-## Use
+## 3. Use
 
 Teleport can activate on its own, but if you want to be sure, drop "use teleport" in your prompt
 
