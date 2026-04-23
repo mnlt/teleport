@@ -599,6 +599,34 @@
       "baseline_tokens_measured": 1802,
       "baseline_tokens_measured_date": "2026-04-22",
       "baseline_tokens_measured_tools": 3
+    },
+    "n8n": {
+      "category": "A",
+      "name": "n8n",
+      "description": "Workflow automation platform \u2014 workflows, executions, credentials, nodes (self-hosted or cloud)",
+      "npm_package": null,
+      "hosted_mcp_url": null,
+      "mcp_server_default_name": "n8n",
+      "env_var": "N8N_API_KEY",
+      "extra_env_vars": [
+        "N8N_BASE_URL"
+      ],
+      "rest_endpoint": "{N8N_BASE_URL}/api/v1",
+      "auth": {
+        "type": "custom-header",
+        "header": "X-N8N-API-KEY",
+        "format": "{token}",
+        "note": "n8n uses X-N8N-API-KEY header, NOT Authorization Bearer. Base URL is user-specific (self-hosted or cloud instance)."
+      },
+      "docs": "https://docs.n8n.io/api/",
+      "key_format": "opaque JWT-like",
+      "signup_url": "https://docs.n8n.io/api/authentication/",
+      "key_format_regex": "^[A-Za-z0-9_.-]{20,}$",
+      "key_example": "eyJhbGc... (JWT-like)",
+      "friction": "low",
+      "friction_note": "self-hosted: Settings \u2192 n8n API \u2192 create key. cloud: similar flow in your workspace.",
+      "multi_var": true,
+      "verified": true
     }
   }
 }

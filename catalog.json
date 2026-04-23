@@ -303,6 +303,16 @@
       "ref": "main"
     },
     {
+      "id": "n8n",
+      "type": "mcp-wrapper",
+      "name": "n8n",
+      "description": "Manage n8n workflow automation: list/get/create/update/trigger workflows, inspect executions, manage credentials. Bypasses the MCP via REST API with N8N_API_KEY + N8N_BASE_URL env vars. Works with self-hosted and n8n Cloud instances.",
+      "tags": ["workflow", "automation", "n8n", "integration", "mcp-wrapper"],
+      "source_repo": "mnlt/teleport",
+      "path": "skills/n8n",
+      "ref": "main"
+    },
+    {
       "id": "brainstorming",
       "type": "skill",
       "name": "Brainstorming",

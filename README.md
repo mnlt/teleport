@@ -81,9 +81,9 @@ Not every MCP stores its credential somewhere teleport can read. Both paths end 
 
 ## Supported MCPs
 
-20 MCP-wrapper skills — credential check, imperative "run `teleport-setup add-key`" guidance, and curl recipes for the common operations:
+21 MCP-wrapper skills — credential check, imperative "run `teleport-setup add-key`" guidance, and curl recipes for the common operations:
 
-Context7 · GitHub · Slack · Notion · Linear · Figma · Jira · Exa · Stripe · Supabase · Vercel · Netlify · Cloudflare · Railway · Resend · Sentry · PostHog · Lemon Squeezy · Discord · Wellread
+Context7 · GitHub · Slack · Notion · Linear · Figma · Jira · Exa · Stripe · Supabase · Vercel · Netlify · Cloudflare · Railway · Resend · Sentry · PostHog · Lemon Squeezy · Discord · Wellread · n8n
 
 ## How migration works
 
@@ -109,7 +109,7 @@ All fetched on-demand from `/tmp/` when you ask for something they cover; nothin
 
 ## Catalog
 
-See [catalog.json](./catalog.json) — 44 entries (20 MCP-wrappers + 24 self-contained skills, including 14 from [obra/superpowers](https://github.com/obra/superpowers)). Each skill's license is governed by its upstream `source_repo`.
+See [catalog.json](./catalog.json) — 45 entries (21 MCP-wrappers + 24 self-contained skills, including 14 from [obra/superpowers](https://github.com/obra/superpowers)). Each skill's license is governed by its upstream `source_repo`.
 
 ## Contributing
 

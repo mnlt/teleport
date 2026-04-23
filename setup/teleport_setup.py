@@ -464,6 +464,23 @@ def cmd_add_key(args: argparse.Namespace) -> int:
             console.print("[red]error:[/red] all three values required")
             return 1
         to_save = {"JIRA_BASE_URL": base.strip(), "JIRA_EMAIL": email.strip(), "JIRA_API_TOKEN": token}
+    elif service == "n8n":
+        console.print("[dim]n8n needs 2 values:[/dim]")
+        base = questionary.text(
+            "N8N_BASE_URL:",
+            instruction="(self-hosted URL, or https://<workspace>.app.n8n.cloud)",
+            style=QS_STYLE,
+        ).ask()
+        if not base:
+            return 130
+        token = questionary.password(
+            "N8N_API_KEY:",
+            style=QS_STYLE,
+        ).ask()
+        if not (base and token):
+            console.print("[red]error:[/red] both values required")
+            return 1
+        to_save = {"N8N_BASE_URL": base.strip().rstrip("/"), "N8N_API_KEY": token}
     else:
         if args.from_stdin:
             value = sys.stdin.read().strip()
