@@ -126,13 +126,22 @@ Teleport only catalogs MCPs already listed on a trusted registry that runs autom
 
 ## Telemetry
 
-Teleport pings an anonymous event counter on three moments to know how many people actually use it:
+Teleport pings an anonymous event counter so the maintainer can see what's used and prioritize:
 
-- `install-completed` — when `install.sh` finishes successfully
-- `first-run` — the first time you run `teleport-setup` on a machine
-- `migration` — after a successful migration of at least one MCP
+| Event | When | Per-MCP? |
+|-------|------|----------|
+| `install-started` | Top of `install.sh` | — |
+| `install-completed` | End of `install.sh` (success) | — |
+| `first-run` | First invocation of `teleport-setup` on a machine | — |
+| `mcp-detected` | `teleport-setup` detects an MCP in your config | ✓ (one per install per MCP) |
+| `add-key-started` | You open `teleport-setup add-key <service>` | ✓ |
+| `add-key-completed` | Credential saved successfully | ✓ |
+| `migration` | ≥1 MCP migrated successfully | — |
+| `skill-used` | Meta-skill fetches a skill from the catalog | ✓ |
 
-No IP stored, no PII, no correlation between pings. Counter runs on [goatcounter.com](https://www.goatcounter.com) (privacy-first). Dashboard: <https://teleport.goatcounter.com/>.
+Only aggregate counts stored: no IP, no PII, no per-event timestamps, no correlation between pings. Counter runs on [Deno Deploy + Deno KV](./counter/) — code is [open source in this repo](./counter/main.ts) so you can audit it.
+
+Stats endpoint (public): <https://teleport.mnlt.deno.net/stats>.
 
 **Opt out**: set `TELEPORT_NO_TELEMETRY=1` in your environment before running the installer or the CLI.
 

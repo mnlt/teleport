@@ -28,27 +28,54 @@ VERSION = "0.7.1"
 CLAUDE_CONFIG = Path.home() / ".claude.json"
 SETTINGS_LOCAL = Path.home() / ".claude" / "settings.local.json"
 KNOWLEDGE_URL = "https://raw.githubusercontent.com/mnlt/teleport/main/mcp-knowledge.json"
-TELEMETRY_URL = "https://teleport.goatcounter.com/count"
-TELEMETRY_MARKER = Path.home() / ".teleport-venv" / ".first-run"
+TELEMETRY_URL = "https://teleport.mnlt.deno.net/count"
+TELEMETRY_DIR = Path.home() / ".teleport-venv"
+TELEMETRY_MARKER = TELEMETRY_DIR / ".first-run"
+TELEMETRY_DETECTED_DIR = TELEMETRY_DIR / ".detected"
 
 
-def telemetry_ping(path: str) -> None:
+def telemetry_ping(event: str, subject: str | None = None) -> None:
     """Anonymous event ping. Silent failure. Opt out: TELEPORT_NO_TELEMETRY=1."""
     if os.environ.get("TELEPORT_NO_TELEMETRY") == "1":
         return
     try:
-        url = f"{TELEMETRY_URL}?p={path}&t={VERSION}"
-        req = urllib.request.Request(url, headers={"User-Agent": f"teleport-setup/{VERSION}"})
+        payload: dict = {"event": event, "version": VERSION}
+        if subject:
+            payload["subject"] = subject
+        req = urllib.request.Request(
+            TELEMETRY_URL,
+            data=json.dumps(payload).encode(),
+            headers={
+                "User-Agent": f"teleport-setup/{VERSION}",
+                "Content-Type": "application/json",
+            },
+            method="POST",
+        )
         urllib.request.urlopen(req, timeout=2).read()
     except Exception:
         pass
 
 
-def telemetry_ping_once(path: str, marker: Path) -> None:
+def telemetry_ping_once(event: str, marker: Path) -> None:
     """Ping only if the marker file doesn't exist. Creates marker on first ping."""
     if marker.exists():
         return
-    telemetry_ping(path)
+    telemetry_ping(event)
+    try:
+        marker.parent.mkdir(parents=True, exist_ok=True)
+        marker.touch()
+    except Exception:
+        pass
+
+
+def telemetry_detect_once(mcp_id: str) -> None:
+    """Ping mcp-detected for a given MCP, once per install (marker file per-id)."""
+    if os.environ.get("TELEPORT_NO_TELEMETRY") == "1":
+        return
+    marker = TELEMETRY_DETECTED_DIR / mcp_id
+    if marker.exists():
+        return
+    telemetry_ping("mcp-detected", mcp_id)
     try:
         marker.parent.mkdir(parents=True, exist_ok=True)
         marker.touch()
@@ -348,6 +375,7 @@ def cmd_add_key(args: argparse.Namespace) -> int:
         console.print("Known services: " + ", ".join(f"[magenta]{k}[/magenta]" for k in sorted(mcps.keys())))
         return 1
 
+    telemetry_ping("add-key-started", service)
     entry = mcps[service]
     env_var = entry.get("env_var")
     signup_url = entry.get("signup_url")
@@ -399,6 +427,7 @@ def cmd_add_key(args: argparse.Namespace) -> int:
         SETTINGS_LOCAL.parent.mkdir(parents=True, exist_ok=True)
         with open(SETTINGS_LOCAL, "w") as f:
             json.dump(settings, f, indent=2)
+        telemetry_ping("add-key-completed", service)
         console.print()
         console.print(Panel.fit(
             f"[green bold]✓ {service} registered.[/green bold]\n\n"
@@ -523,6 +552,7 @@ def cmd_add_key(args: argparse.Namespace) -> int:
     SETTINGS_LOCAL.parent.mkdir(parents=True, exist_ok=True)
     with open(SETTINGS_LOCAL, "w") as f:
         json.dump(settings, f, indent=2)
+    telemetry_ping("add-key-completed", service)
 
     # ---- Success panel ----
     console.print()
@@ -594,7 +624,7 @@ def cmd_interactive(args: argparse.Namespace) -> int:
     if not ensure_claude_code_installed():
         return 1
 
-    telemetry_ping_once("/first-run", TELEMETRY_MARKER)
+    telemetry_ping_once("first-run", TELEMETRY_MARKER)
 
     knowledge = load_knowledge(args.knowledge)
     config = load_json(CLAUDE_CONFIG)
@@ -604,6 +634,10 @@ def cmd_interactive(args: argparse.Namespace) -> int:
 
     mcps = detect_mcps(config)
     plan = build_plan(mcps, knowledge, existing_env, disabled_map)
+
+    # Telemetry: ping mcp-detected once per install per MCP id
+    for item in plan:
+        telemetry_detect_once(item.get("mcp_id") or item.get("name", ""))
 
     # ── Header ────────────────────────────────────
     console.print()
@@ -665,7 +699,7 @@ def cmd_interactive(args: argparse.Namespace) -> int:
             json.dump(settings, f, indent=2)
         with open(CLAUDE_CONFIG, "w") as f:
             json.dump(config, f, indent=2)
-        telemetry_ping("/migration")
+        telemetry_ping("migration")
 
     # Show skipped (already-migrated + unsupported) inline for completeness
     for item in done:

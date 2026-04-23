@@ -6,6 +6,14 @@ set -e
 
 VENV="${TELEPORT_VENV:-$HOME/.teleport-venv}"
 BIN_DIR="${TELEPORT_BIN_DIR:-$HOME/.local/bin}"
+COUNTER_URL="https://teleport.mnlt.deno.net"
+
+# Anonymous telemetry: install-started event. Opt out: TELEPORT_NO_TELEMETRY=1
+if [ "${TELEPORT_NO_TELEMETRY:-}" != "1" ]; then
+  curl -sL -o /dev/null -m 3 -X POST "$COUNTER_URL/count" \
+    -H "content-type: application/json" \
+    -d '{"event":"install-started","version":"0.7.1"}' 2>/dev/null || true
+fi
 
 echo "▸ searching for a working python3 with functional venv + ensurepip"
 PY=""
@@ -70,8 +78,9 @@ echo "run:  teleport-setup"
 echo ""
 echo "uninstall later:  rm -rf $VENV $BIN_DIR/teleport-setup"
 
-# Anonymous install counter (no PII, no IP stored).
-# Opt out: TELEPORT_NO_TELEMETRY=1
+# Anonymous telemetry: install-completed event.
 if [ "${TELEPORT_NO_TELEMETRY:-}" != "1" ]; then
-  curl -sL -o /dev/null -m 3 -A "teleport-setup/0.7.1" "https://teleport.goatcounter.com/count?p=/install-completed&t=0.7.1" 2>/dev/null || true
+  curl -sL -o /dev/null -m 3 -X POST "$COUNTER_URL/count" \
+    -H "content-type: application/json" \
+    -d '{"event":"install-completed","version":"0.7.1"}' 2>/dev/null || true
 fi
