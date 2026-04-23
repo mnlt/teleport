@@ -50,7 +50,9 @@ Opens the signup page, validates the format, saves it with masked input.
 
 ## Use
 
-```use teleport on your prompts```
+```bash
+How do I ... **use teleport**
+```
 
 ## Two paths, depending on how the MCP was installed
 
