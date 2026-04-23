@@ -625,6 +625,57 @@ def cmd_scan(args: argparse.Namespace) -> int:
     return 0
 
 
+def cmd_uninstall(args: argparse.Namespace) -> int:
+    """Remove teleport artifacts (CLI + meta-skill + venv + markers). Does NOT
+    touch the user's credentials in settings.local.json or MCP config in
+    ~/.claude.json — those belong to the user."""
+    import shutil as _shutil
+    home = Path.home()
+    venv_dir = home / ".teleport-venv"
+    cli_link = home / ".local" / "bin" / "teleport-setup"
+    skill_dir = home / ".claude" / "skills" / "teleport"
+
+    console.print()
+    console.print("[bold]teleport uninstall[/bold]")
+    console.print()
+    console.print("Will remove:")
+    console.print(f"  [dim]{venv_dir}[/dim]")
+    console.print(f"  [dim]{cli_link}[/dim]")
+    console.print(f"  [dim]{skill_dir}[/dim]")
+    console.print()
+    console.print("[bold]Will NOT touch:[/bold]")
+    console.print("  [dim]~/.claude/settings.local.json[/dim]  (your migrated credentials stay)")
+    console.print("  [dim]~/.claude.json[/dim]                  (your MCP config stays — re-enable with `claude mcp enable <name>`)")
+    console.print()
+
+    if not args.yes and sys.stdin.isatty():
+        if not questionary.confirm("Proceed?", default=True, style=QS_STYLE).ask():
+            console.print("[dim]Cancelled.[/dim]")
+            return 1
+
+    telemetry_ping("uninstall")
+
+    removed = []
+    for p in (skill_dir, cli_link, venv_dir):
+        try:
+            if p.is_symlink() or p.is_file():
+                p.unlink()
+                removed.append(str(p))
+            elif p.is_dir():
+                _shutil.rmtree(p)
+                removed.append(str(p))
+        except FileNotFoundError:
+            pass
+        except Exception as e:
+            console.print(f"[yellow]warn:[/yellow] couldn't remove {p}: {e}")
+
+    console.print()
+    console.print(f"[green]✓ Uninstalled.[/green] Removed {len(removed)} path(s).")
+    console.print()
+    console.print("[dim]If you want to also remove migrated credentials, edit ~/.claude/settings.local.json manually.[/dim]")
+    return 0
+
+
 def cmd_interactive(args: argparse.Namespace) -> int:
     """Radically simple flow: auto-migrate everything ready (zero risk — only disabled, reversible),
     then walk through setup for anything that needs credentials, then final summary."""
@@ -880,10 +931,16 @@ def main() -> int:
     p_addkey.add_argument("--from-stdin", action="store_true", help="read key from stdin instead of prompting")
     p_addkey.add_argument("--from-file", metavar="PATH", help="read key from a file instead of prompting")
 
+    p_uninst = sub.add_parser("uninstall",
+                              help="remove teleport CLI + meta-skill (leaves your credentials and MCP config untouched)")
+    p_uninst.add_argument("--yes", "-y", action="store_true", help="skip confirmation prompt")
+
     args = parser.parse_args()
     try:
         if args.subcommand == "add-key":
             return cmd_add_key(args)
+        if args.subcommand == "uninstall":
+            return cmd_uninstall(args)
         if args.scan:
             return cmd_scan(args)
         return cmd_interactive(args)

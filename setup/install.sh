@@ -76,7 +76,7 @@ fi
 
 echo "run:  teleport-setup"
 echo ""
-echo "uninstall later:  rm -rf $VENV $BIN_DIR/teleport-setup"
+echo "uninstall later:  teleport-setup uninstall"
 
 # Anonymous telemetry: install-completed event.
 if [ "${TELEPORT_NO_TELEMETRY:-}" != "1" ]; then

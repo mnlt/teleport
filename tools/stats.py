@@ -39,9 +39,14 @@ def rule(title: str) -> None:
 
 
 def print_users(stats: dict) -> None:
-    users = stats.get("install-completed", 0)
+    installed = stats.get("install-completed", 0)
+    uninstalled = stats.get("uninstall", 0)
+    active = max(installed - uninstalled, 0)
     print()
-    print(f"  👤 {users} user{'' if users == 1 else 's'}  [installed successfully]")
+    line = f"  👤 {installed} user{'' if installed == 1 else 's'}  [installed successfully]"
+    if uninstalled:
+        line += f"   •   🗑  {uninstalled} uninstall{'' if uninstalled == 1 else 's'}   •   {active} active"
+    print(line)
     print()
 
 
