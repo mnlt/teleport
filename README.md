@@ -22,12 +22,6 @@ The result: a smaller baseline context per turn and an agent that composes calls
 >
 > **Want to submit your own MCP?** Increase adoption - users discover and use it while coding. See [CONTRIBUTING.md](CONTRIBUTING.md).
 
-## What you save
-
-MCP tool definitions get loaded into every turn. In a multi-server setup, that's tens of thousands of tokens paid upfront - every turn, for schemas the agent may not use. Bigger context windows raise the ceiling, but they don't change the per-turn cost, cache invalidation, or the "process everything the tool returns" problem.
-
-Teleport skills don't pre-load. Nothing enters context from message one — no tool definitions, no schemas, no compounding across turns. A skill loads once, on demand, only when the agent actually needs it.
-
 ## Why not just…
 
 **…reuse MCP since it already standardizes integration?** MCP solves "one integration, many clients". Teleport solves "keep the baseline context small when I'm only using one or two services per turn". Different problems. If you don't feel the per-turn baseline cost, MCP is fine.
@@ -68,6 +62,12 @@ Teleport can activate on its own, but if you want to be sure, drop "use teleport
 How do I set up Next.js 15 app with Auth.js ... use teleport
 ```
 
+## What you save
+
+MCP tool definitions get loaded into every turn. In a multi-server setup, that's tens of thousands of tokens paid upfront - every turn, for schemas the agent may not use. Bigger context windows raise the ceiling, but they don't change the per-turn cost, cache invalidation, or the "process everything the tool returns" problem.
+
+Teleport skills don't pre-load. Nothing enters context from message one — no tool definitions, no schemas, no compounding across turns. A skill loads once, on demand, only when the agent actually needs it.
+
 ## Two paths, depending on how the MCP was installed
 
 Not every MCP stores its credential somewhere teleport can read. Both paths end up the same place: env var in `settings.local.json`, MCP disabled, skill hits REST API directly.
@@ -79,7 +79,7 @@ Not every MCP stores its credential somewhere teleport can read. Both paths end 
 
 ## Supported MCPs
 
-Context7 · GitHub · Slack · Notion · Linear · Figma · Jira · Exa · Stripe · Supabase · Vercel · Netlify · Cloudflare · Railway · Resend · Sentry · PostHog · Lemon Squeezy · Discord · Wellread · n8n
+Context7 · GitHub · Superpowers · Slack · Notion · Linear · Figma · Jira · Exa · Stripe · Supabase · Vercel · Netlify · Wellread · Cloudflare · Railway · Resend · Sentry · PostHog · Lemon Squeezy · Discord · n8n
 
 ## How migration works
 
