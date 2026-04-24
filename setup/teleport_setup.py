@@ -24,9 +24,13 @@ import urllib.request
 import webbrowser
 from pathlib import Path
 
-VERSION = "0.7.1"
+VERSION = "0.8.0"
 CLAUDE_CONFIG = Path.home() / ".claude.json"
 SETTINGS_LOCAL = Path.home() / ".claude" / "settings.local.json"
+ENV_SH = Path.home() / ".teleport" / "env.sh"
+SHELL_RC_FILES = [Path.home() / ".zshrc", Path.home() / ".bashrc"]
+SHELL_SOURCE_MARKER = "# teleport env (managed by teleport-setup)"
+SHELL_SOURCE_LINE = '[ -f "$HOME/.teleport/env.sh" ] && . "$HOME/.teleport/env.sh"'
 KNOWLEDGE_URL = "https://raw.githubusercontent.com/mnlt/teleport/main/mcp-knowledge.json"
 TELEMETRY_URL = "https://teleport.mnlt.deno.net/count"
 TELEMETRY_DIR = Path.home() / ".teleport-venv"
@@ -148,6 +152,102 @@ def backup_file(path: Path) -> Path:
     bak = path.parent / f"{path.name}.bak-{int(time.time())}"
     shutil.copy2(path, bak)
     return bak
+
+
+# --- env.sh persistence ---
+# Credentials are stored in ~/.teleport/env.sh (shell-sourced) rather than
+# ~/.claude/settings.local.json. Claude Code's `env` block cascade is unreliable
+# when launched from subdirectories — a shell-sourced file is deterministic and
+# works regardless of launch location. See also: migrate_legacy_env_block().
+
+def load_env_sh() -> dict:
+    """Parse ~/.teleport/env.sh into a dict of VAR -> value."""
+    if not ENV_SH.exists():
+        return {}
+    env = {}
+    for line in ENV_SH.read_text().splitlines():
+        line = line.strip()
+        if not line or line.startswith("#"):
+            continue
+        m = re.match(r'^export\s+([A-Z_][A-Z0-9_]*)=(?:"((?:[^"\\]|\\.)*)"|\'([^\']*)\'|(\S.*))$', line)
+        if not m:
+            continue
+        key = m.group(1)
+        if m.group(2) is not None:
+            val = m.group(2).replace('\\"', '"').replace('\\\\', '\\')
+        elif m.group(3) is not None:
+            val = m.group(3)
+        else:
+            val = m.group(4)
+        env[key] = val
+    return env
+
+
+def write_env_sh(env: dict) -> None:
+    """Write dict to ~/.teleport/env.sh with mode 0600, shell-sourceable."""
+    ENV_SH.parent.mkdir(parents=True, exist_ok=True)
+    lines = [
+        "# teleport-managed — do not edit by hand.",
+        "# Use `teleport-setup add-key <service>` to add credentials.",
+        "",
+    ]
+    for k in sorted(env):
+        v = env[k].replace('\\', '\\\\').replace('"', '\\"')
+        lines.append(f'export {k}="{v}"')
+    ENV_SH.write_text("\n".join(lines) + "\n")
+    try:
+        os.chmod(ENV_SH, 0o600)
+    except Exception:
+        pass
+
+
+def ensure_shell_sources_env_sh() -> list:
+    """Append source line to existing ~/.zshrc / ~/.bashrc if missing.
+    Only amends files that already exist — never creates new rc files.
+    Returns list of Path objects that were updated."""
+    updated = []
+    snippet = f"\n{SHELL_SOURCE_MARKER}\n{SHELL_SOURCE_LINE}\n"
+    for rc in SHELL_RC_FILES:
+        if not rc.exists():
+            continue
+        content = rc.read_text()
+        if SHELL_SOURCE_MARKER in content:
+            continue
+        with open(rc, "a") as f:
+            f.write(snippet)
+        updated.append(rc)
+    return updated
+
+
+def migrate_legacy_env_block() -> dict:
+    """One-time migration: if ~/.claude/settings.local.json has an `env` block,
+    move its contents to ~/.teleport/env.sh, then strip the block from the JSON.
+
+    env.sh values win on conflict (represent newer writes). Safe to call
+    repeatedly — no-op when settings.local.json has no env block.
+
+    Returns the current env dict after migration.
+    """
+    env = load_env_sh()
+    if not SETTINGS_LOCAL.exists():
+        return env
+    try:
+        settings = load_json(SETTINGS_LOCAL)
+    except Exception:
+        return env
+    legacy_env = settings.get("env")
+    if not legacy_env:
+        return env
+    merged = {**legacy_env, **env}
+    write_env_sh(merged)
+    # Also ensure shell rc sources env.sh — otherwise the migration silently
+    # leaves the user worse off (keys in env.sh but nothing reads them).
+    ensure_shell_sources_env_sh()
+    backup_file(SETTINGS_LOCAL)
+    settings.pop("env", None)
+    with open(SETTINGS_LOCAL, "w") as f:
+        json.dump(settings, f, indent=2)
+    return merged
 
 
 # --- detection & classification ---
@@ -425,27 +525,33 @@ def cmd_add_key(args: argparse.Namespace) -> int:
             return 1
         if regex_str and not re.match(regex_str, value):
             console.print(f"[yellow]warning:[/yellow] key '{value[:8]}…' doesn't match expected format")
-        settings = load_json(SETTINGS_LOCAL)
-        env_block = settings.setdefault("env", {})
+        env_block = migrate_legacy_env_block()
         if env_block.get(env_var) == value:
             console.print(f"[dim]· {env_var} already set with this value. No changes.[/dim]")
             return 0
-        bak = backup_file(SETTINGS_LOCAL)
+        bak = backup_file(ENV_SH)
         if bak:
             console.print(f"[dim]Backup: {bak}[/dim]")
         env_block[env_var] = value
-        SETTINGS_LOCAL.parent.mkdir(parents=True, exist_ok=True)
-        with open(SETTINGS_LOCAL, "w") as f:
-            json.dump(settings, f, indent=2)
+        write_env_sh(env_block)
+        updated_rcs = ensure_shell_sources_env_sh()
         telemetry_ping("add-key-completed", service)
         console.print()
-        console.print(Panel.fit(
-            f"[green bold]✓ {service} registered.[/green bold]\n\n"
-            f"  [green]✓[/green] {env_var}\n\n"
-            "[bold]Next:[/bold]\n"
-            "  [dim]1.[/dim] Restart Claude Code  [dim](/exit, then `claude`)[/dim]\n"
-            "  [dim]2.[/dim] Ask naturally — the skill will use the new key",
-            border_style="green", padding=(1, 2)))
+        next_lines = [
+            f"[green bold]✓ {service} registered.[/green bold]",
+            "",
+            f"  [green]✓[/green] {env_var}  [dim]→ ~/.teleport/env.sh[/dim]",
+        ]
+        if updated_rcs:
+            rc_names = ", ".join(p.name for p in updated_rcs)
+            next_lines.append(f"  [green]✓[/green] source line added to [cyan]{rc_names}[/cyan]")
+        next_lines += [
+            "",
+            "[bold]Next:[/bold]",
+            "  [dim]1.[/dim] Open a new terminal  [dim](or run `source ~/.zshrc`)[/dim]",
+            "  [dim]2.[/dim] Run `claude` and ask naturally — the skill will use the new key",
+        ]
+        console.print(Panel.fit("\n".join(next_lines), border_style="green", padding=(1, 2)))
         return 0
 
     # ---- Service info panel ----
@@ -479,8 +585,7 @@ def cmd_add_key(args: argparse.Namespace) -> int:
 
     # ---- Collect key(s) ----
     # Special case: jira needs 3 inputs (email + base URL + token)
-    settings = load_json(SETTINGS_LOCAL)
-    env_block = settings.setdefault("env", {})
+    env_block = migrate_legacy_env_block()
     to_save = {}  # env_var -> value
 
     if service == "jira":
@@ -552,16 +657,15 @@ def cmd_add_key(args: argparse.Namespace) -> int:
         return 0
 
     # ---- Backup + write ----
-    bak = backup_file(SETTINGS_LOCAL)
+    bak = backup_file(ENV_SH)
     if bak:
         console.print(f"[dim]Backup: {bak}[/dim]")
 
     for k, v in to_save.items():
         env_block[k] = v
 
-    SETTINGS_LOCAL.parent.mkdir(parents=True, exist_ok=True)
-    with open(SETTINGS_LOCAL, "w") as f:
-        json.dump(settings, f, indent=2)
+    write_env_sh(env_block)
+    updated_rcs = ensure_shell_sources_env_sh()
     telemetry_ping("add-key-completed", service)
 
     # ---- Success panel ----
@@ -571,11 +675,14 @@ def cmd_add_key(args: argparse.Namespace) -> int:
         "",
     ]
     for k in to_save:
-        success_lines.append(f"  [green]✓[/green] {k}")
+        success_lines.append(f"  [green]✓[/green] {k}  [dim]→ ~/.teleport/env.sh[/dim]")
+    if updated_rcs:
+        rc_names = ", ".join(p.name for p in updated_rcs)
+        success_lines.append(f"  [green]✓[/green] source line added to [cyan]{rc_names}[/cyan]")
     success_lines.append("")
     success_lines.append("[bold]Next:[/bold]")
-    success_lines.append("  [dim]1.[/dim] Restart Claude Code  [dim](close & reopen, or run `/exit` then `claude`)[/dim]")
-    success_lines.append("  [dim]2.[/dim] Retry your original request — the skill should now work")
+    success_lines.append("  [dim]1.[/dim] Open a new terminal  [dim](or run `source ~/.zshrc`)[/dim]")
+    success_lines.append("  [dim]2.[/dim] Run `claude` and retry — the skill should now work")
     success_lines.append("")
     success_lines.append(f"[dim]Verify: [magenta]teleport-setup --scan[/magenta][/dim]")
 
@@ -605,8 +712,7 @@ def cmd_scan(args: argparse.Namespace) -> int:
         return 1
     knowledge = load_knowledge(args.knowledge)
     config = load_json(CLAUDE_CONFIG)
-    settings = load_json(SETTINGS_LOCAL)
-    existing_env = settings.get("env", {})
+    existing_env = migrate_legacy_env_block()
     disabled_map = get_disabled_mcps(config)
 
     mcps = detect_mcps(config)
@@ -630,8 +736,8 @@ def cmd_scan(args: argparse.Namespace) -> int:
 
 def cmd_uninstall(args: argparse.Namespace) -> int:
     """Remove teleport artifacts (CLI + meta-skill + venv + markers). Does NOT
-    touch the user's credentials in settings.local.json or MCP config in
-    ~/.claude.json — those belong to the user."""
+    touch the user's credentials in ~/.teleport/env.sh, the source line in
+    shell rc files, or MCP config in ~/.claude.json — those belong to the user."""
     import shutil as _shutil
     home = Path.home()
     venv_dir = home / ".teleport-venv"
@@ -647,7 +753,8 @@ def cmd_uninstall(args: argparse.Namespace) -> int:
     console.print(f"  [dim]{skill_dir}[/dim]")
     console.print()
     console.print("[bold]Will NOT touch:[/bold]")
-    console.print("  [dim]~/.claude/settings.local.json[/dim]  (your migrated credentials stay)")
+    console.print("  [dim]~/.teleport/env.sh[/dim]             (your migrated credentials stay)")
+    console.print("  [dim]~/.zshrc / ~/.bashrc[/dim]           (the `source` line stays; remove it manually if you want)")
     console.print("  [dim]~/.claude.json[/dim]                  (your MCP config stays — re-enable with `claude mcp enable <name>`)")
     console.print()
 
@@ -675,7 +782,7 @@ def cmd_uninstall(args: argparse.Namespace) -> int:
     console.print()
     console.print(f"[green]✓ Uninstalled.[/green] Removed {len(removed)} path(s).")
     console.print()
-    console.print("[dim]If you want to also remove migrated credentials, edit ~/.claude/settings.local.json manually.[/dim]")
+    console.print("[dim]To also remove credentials: rm ~/.teleport/env.sh; then delete the `teleport env` block from ~/.zshrc / ~/.bashrc manually.[/dim]")
     return 0
 
 
@@ -689,8 +796,7 @@ def cmd_interactive(args: argparse.Namespace) -> int:
 
     knowledge = load_knowledge(args.knowledge)
     config = load_json(CLAUDE_CONFIG)
-    settings = load_json(SETTINGS_LOCAL)
-    existing_env = settings.get("env", {})
+    existing_env = migrate_legacy_env_block()
     disabled_map = get_disabled_mcps(config)
 
     mcps = detect_mcps(config)
@@ -751,9 +857,9 @@ def cmd_interactive(args: argparse.Namespace) -> int:
 
     # ── PHASE 1: auto-migrate + disable ready items ──
     migrated = []
-    bak_sl = backup_file(SETTINGS_LOCAL) if ready else None
+    bak_env = backup_file(ENV_SH) if ready else None
     bak_cc = backup_file(CLAUDE_CONFIG) if ready else None
-    env_block = settings.setdefault("env", {})
+    env_block = existing_env  # dict from migrate_legacy_env_block(); in-place updates OK
 
     if ready:
         for item in ready:
@@ -761,8 +867,8 @@ def cmd_interactive(args: argparse.Namespace) -> int:
             disable_mcp_in_config(config, item["scope"], item["name"])
             migrated.append(item)
             console.print(f"  [green]✓[/green] {item['name']}  [dim]migrated + disabled MCP[/dim]")
-        with open(SETTINGS_LOCAL, "w") as f:
-            json.dump(settings, f, indent=2)
+        write_env_sh(env_block)
+        ensure_shell_sources_env_sh()
         with open(CLAUDE_CONFIG, "w") as f:
             json.dump(config, f, indent=2)
         for item in migrated:
