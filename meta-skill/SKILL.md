@@ -58,6 +58,25 @@ Immediately after the download, emit an anonymous usage ping (silent failure, mu
 
 Read the downloaded SKILL.md with the Read tool. Inform the user: `Using skill: {name} (from {source_repo})`.
 
+### Step 3.5 — Check freshness
+
+Compute the freshness label from the catalog entry's `volatility` and `last_verified_at`:
+
+| Volatility | Fresh (silent) | Check (warn)    | Stale (strong warn) |
+|------------|----------------|------------------|---------------------|
+| timeless   | ≤365d          | —                | >365d               |
+| stable     | ≤180d          | 180–365d         | >365d               |
+| evolving   | ≤30d           | 30–90d           | >90d                |
+| volatile   | ≤7d            | 7–30d            | >30d                |
+
+Compute age as `today − last_verified_at` in days. Then:
+
+- **fresh** → proceed silently.
+- **check** → before executing, tell the user: `⚠ This skill was last verified {N} days ago ({volatility}). Examples should still work, but if a request fails unexpectedly the API may have changed — please flag it so the skill can be refreshed.`
+- **stale** → before executing, tell the user: `⚠ This skill hasn't been verified in {N} days ({volatility}). Treat the curl patterns as hints rather than guaranteed current. If anything fails, fall back to web search for current API docs and report the breakage.`
+
+If `volatility` or `last_verified_at` is missing from the catalog entry (e.g. older schema), default to `evolving` and use `added_at` as the verification date.
+
 ### Step 4 — Follow the skill, lazy-fetching auxiliary files
 
 As you follow the SKILL.md instructions:

@@ -1,6 +1,6 @@
 {
-  "version": "0.3.0",
-  "updated_at": "2026-04-22",
+  "version": "0.4.0",
+  "updated_at": "2026-04-24",
   "skills": [
     {
       "id": "pdf",
@@ -16,7 +16,9 @@
       "source_repo": "anthropics/skills",
       "path": "skills/pdf",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "stable",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "docx",
@@ -32,7 +34,9 @@
       "source_repo": "anthropics/skills",
       "path": "skills/docx",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "stable",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "xlsx",
@@ -48,7 +52,9 @@
       "source_repo": "anthropics/skills",
       "path": "skills/xlsx",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "stable",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "pptx",
@@ -64,7 +70,9 @@
       "source_repo": "anthropics/skills",
       "path": "skills/pptx",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "stable",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "canvas-design",
@@ -80,7 +88,9 @@
       "source_repo": "anthropics/skills",
       "path": "skills/canvas-design",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "evolving",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "webapp-testing",
@@ -96,7 +106,9 @@
       "source_repo": "anthropics/skills",
       "path": "skills/webapp-testing",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "evolving",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "mcp-builder",
@@ -112,7 +124,9 @@
       "source_repo": "anthropics/skills",
       "path": "skills/mcp-builder",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "evolving",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "frontend-design",
@@ -128,7 +142,9 @@
       "source_repo": "anthropics/skills",
       "path": "skills/frontend-design",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "evolving",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "algorithmic-art",
@@ -144,7 +160,9 @@
       "source_repo": "anthropics/skills",
       "path": "skills/algorithmic-art",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "evolving",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "slack-gif-creator",
@@ -160,7 +178,9 @@
       "source_repo": "anthropics/skills",
       "path": "skills/slack-gif-creator",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "evolving",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "context7",
@@ -178,13 +198,15 @@
       "source_repo": "mnlt/teleport",
       "path": "skills/context7",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "evolving",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "github",
       "type": "mcp-wrapper",
       "name": "GitHub",
-      "description": "Operate on GitHub via REST API \u2014 repos, PRs, issues, code search, releases. Bypasses MCP via HTTP with GITHUB_TOKEN env var.",
+      "description": "Operate on GitHub via REST API — repos, PRs, issues, code search, releases. Bypasses MCP via HTTP with GITHUB_TOKEN env var.",
       "tags": [
         "github",
         "git",
@@ -197,7 +219,9 @@
       "source_repo": "mnlt/teleport",
       "path": "skills/github",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "stable",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "slack",
@@ -214,7 +238,9 @@
       "source_repo": "mnlt/teleport",
       "path": "skills/slack",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "stable",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "notion",
@@ -232,7 +258,9 @@
       "source_repo": "mnlt/teleport",
       "path": "skills/notion",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "evolving",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "linear",
@@ -250,7 +278,9 @@
       "source_repo": "mnlt/teleport",
       "path": "skills/linear",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "evolving",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "figma",
@@ -267,7 +297,9 @@
       "source_repo": "mnlt/teleport",
       "path": "skills/figma",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "stable",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "jira",
@@ -285,13 +317,15 @@
       "source_repo": "mnlt/teleport",
       "path": "skills/jira",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "evolving",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "exa",
       "type": "mcp-wrapper",
       "name": "Exa Search",
-      "description": "AI-first web search via Exa API \u2014 semantic search, answer synthesis. Bypasses MCP via HTTP with EXA_API_KEY env var.",
+      "description": "AI-first web search via Exa API — semantic search, answer synthesis. Bypasses MCP via HTTP with EXA_API_KEY env var.",
       "tags": [
         "exa",
         "search",
@@ -302,7 +336,9 @@
       "source_repo": "mnlt/teleport",
       "path": "skills/exa",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "evolving",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "stripe",
@@ -320,7 +356,9 @@
       "source_repo": "mnlt/teleport",
       "path": "skills/stripe",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "stable",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "supabase",
@@ -339,7 +377,9 @@
       "source_repo": "mnlt/teleport",
       "path": "skills/supabase",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "evolving",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "vercel",
@@ -358,7 +398,9 @@
       "source_repo": "mnlt/teleport",
       "path": "skills/vercel",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "evolving",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "netlify",
@@ -376,7 +418,9 @@
       "source_repo": "mnlt/teleport",
       "path": "skills/netlify",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "evolving",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "cloudflare",
@@ -397,7 +441,9 @@
       "source_repo": "mnlt/teleport",
       "path": "skills/cloudflare",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "evolving",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "railway",
@@ -414,7 +460,9 @@
       "source_repo": "mnlt/teleport",
       "path": "skills/railway",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "evolving",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "resend",
@@ -431,7 +479,9 @@
       "source_repo": "mnlt/teleport",
       "path": "skills/resend",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "evolving",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "sentry",
@@ -449,7 +499,9 @@
       "source_repo": "mnlt/teleport",
       "path": "skills/sentry",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "evolving",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "posthog",
@@ -468,7 +520,9 @@
       "source_repo": "mnlt/teleport",
       "path": "skills/posthog",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "evolving",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "lemonsqueezy",
@@ -486,7 +540,9 @@
       "source_repo": "mnlt/teleport",
       "path": "skills/lemonsqueezy",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "evolving",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "discord",
@@ -505,13 +561,15 @@
       "source_repo": "mnlt/teleport",
       "path": "skills/discord",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "evolving",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "wellread",
       "type": "mcp-wrapper",
       "name": "Wellread",
-      "description": "Collective research memory for AI coding agents \u2014 search prior research before web-searching, save findings, view karma stats. Bypasses the MCP via direct JSON-RPC to the hosted endpoint with auto-registered API key (WELLREAD_API_KEY).",
+      "description": "Collective research memory for AI coding agents — search prior research before web-searching, save findings, view karma stats. Bypasses the MCP via direct JSON-RPC to the hosted endpoint with auto-registered API key (WELLREAD_API_KEY).",
       "tags": [
         "research",
         "memory",
@@ -522,7 +580,9 @@
       "source_repo": "mnlt/teleport",
       "path": "skills/wellread",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "evolving",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "n8n",
@@ -539,7 +599,9 @@
       "source_repo": "mnlt/teleport",
       "path": "skills/n8n",
       "ref": "main",
-      "added_at": "2026-04-23"
+      "added_at": "2026-04-23",
+      "volatility": "evolving",
+      "last_verified_at": "2026-04-23"
     },
     {
       "id": "brainstorming",
@@ -554,7 +616,9 @@
       "source_repo": "obra/superpowers",
       "path": "skills/brainstorming",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "evolving",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "dispatching-parallel-agents",
@@ -570,7 +634,9 @@
       "source_repo": "obra/superpowers",
       "path": "skills/dispatching-parallel-agents",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "evolving",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "executing-plans",
@@ -585,7 +651,9 @@
       "source_repo": "obra/superpowers",
       "path": "skills/executing-plans",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "evolving",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "finishing-a-development-branch",
@@ -600,13 +668,15 @@
       "source_repo": "obra/superpowers",
       "path": "skills/finishing-a-development-branch",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "evolving",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "receiving-code-review",
       "type": "skill",
       "name": "Receiving Code Review",
-      "description": "Respond to code review feedback constructively \u2014 address comments, update PR, track unresolved items.",
+      "description": "Respond to code review feedback constructively — address comments, update PR, track unresolved items.",
       "tags": [
         "coding-workflow",
         "code-review",
@@ -615,13 +685,15 @@
       "source_repo": "obra/superpowers",
       "path": "skills/receiving-code-review",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "evolving",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "requesting-code-review",
       "type": "skill",
       "name": "Requesting Code Review",
-      "description": "Prepare a PR for review \u2014 title, description, test plan, reviewers, and self-review checklist.",
+      "description": "Prepare a PR for review — title, description, test plan, reviewers, and self-review checklist.",
       "tags": [
         "coding-workflow",
         "code-review",
@@ -630,7 +702,9 @@
       "source_repo": "obra/superpowers",
       "path": "skills/requesting-code-review",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "evolving",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "subagent-driven-development",
@@ -645,7 +719,9 @@
       "source_repo": "obra/superpowers",
       "path": "skills/subagent-driven-development",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "evolving",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "systematic-debugging",
@@ -660,7 +736,9 @@
       "source_repo": "obra/superpowers",
       "path": "skills/systematic-debugging",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "evolving",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "test-driven-development",
@@ -676,13 +754,15 @@
       "source_repo": "obra/superpowers",
       "path": "skills/test-driven-development",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "evolving",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "using-git-worktrees",
       "type": "skill",
       "name": "Using Git Worktrees",
-      "description": "Work on multiple branches simultaneously with git worktree \u2014 when it's worth the complexity.",
+      "description": "Work on multiple branches simultaneously with git worktree — when it's worth the complexity.",
       "tags": [
         "coding-workflow",
         "git",
@@ -691,7 +771,9 @@
       "source_repo": "obra/superpowers",
       "path": "skills/using-git-worktrees",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "evolving",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "using-superpowers",
@@ -706,13 +788,15 @@
       "source_repo": "obra/superpowers",
       "path": "skills/using-superpowers",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "evolving",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "verification-before-completion",
       "type": "skill",
       "name": "Verification Before Completion",
-      "description": "Verify the work actually works before marking a task done \u2014 avoid premature 'done' signals.",
+      "description": "Verify the work actually works before marking a task done — avoid premature 'done' signals.",
       "tags": [
         "coding-workflow",
         "quality",
@@ -721,13 +805,15 @@
       "source_repo": "obra/superpowers",
       "path": "skills/verification-before-completion",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "evolving",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "writing-plans",
       "type": "skill",
       "name": "Writing Plans",
-      "description": "Write a concrete implementation plan before writing code \u2014 structure, steps, unknowns, verification.",
+      "description": "Write a concrete implementation plan before writing code — structure, steps, unknowns, verification.",
       "tags": [
         "coding-workflow",
         "planning",
@@ -736,7 +822,9 @@
       "source_repo": "obra/superpowers",
       "path": "skills/writing-plans",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "evolving",
+      "last_verified_at": "2026-04-22"
     },
     {
       "id": "writing-skills",
@@ -751,7 +839,9 @@
       "source_repo": "obra/superpowers",
       "path": "skills/writing-skills",
       "ref": "main",
-      "added_at": "2026-04-22"
+      "added_at": "2026-04-22",
+      "volatility": "evolving",
+      "last_verified_at": "2026-04-22"
     }
   ]
 }
